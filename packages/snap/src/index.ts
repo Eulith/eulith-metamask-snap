@@ -37,7 +37,23 @@ export const onRpcRequest: OnRpcRequestHandler = ({ origin, request }) => {
 
 // { transaction, chainId, transactionOrigin }
 export const onTransaction: OnTransactionHandler = async (_details) => {
+  let storedData = await snap.request({
+    method: 'snap_manageState',
+    params: { operation: 'get' },
+  });
+
+  if (storedData === null) {
+    storedData = { timestamp: Date.now() };
+    await snap.request({
+      method: 'snap_manageState',
+      params: { operation: 'update', newState: storedData },
+    });
+  }
+
   return {
-    content: panel([heading('Eulith'), text('Test message')]),
+    content: panel([
+      heading('Eulith'),
+      text(`Timestamp: ${storedData.timestamp}`),
+    ]),
   };
 };
