@@ -58,16 +58,26 @@ export const getSnap = async (version?: string): Promise<Snap | undefined> => {
  */
 
 export const setEulithToken = async () => {
+  // eslint-disable-next-line no-alert
+  const csv = window.prompt(
+    'Enter your Eulith API token and auth address, comma-separated:',
+  );
+
+  if (!csv) {
+    return;
+  }
+
+  const [token, authAddress] = csv.split(',');
   await window.ethereum.request({
     method: 'wallet_invokeSnap',
     params: {
       snapId: defaultSnapOrigin,
       request: {
-        method: 'eulith_snapSetToken',
+        method: 'eulith_snapSetAccount',
         params: [
           {
-            token:
-              'eyJ0eXAiOiJKV1QiLCJhbGciOiJFUzI1NksifQ.eyJzdWIiOiJsaWJ0ZXN0IiwiZXhwIjoxNzMwOTI0MTIzLCJzZWVkIjoiYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWEiLCJwcml2aWxlZ2VzIjp7InByaXZpbGVnZXMiOlsiQXJtb3JXYWxsZXQiLCJBZG1pbiJdfX0.uxt5qTPOFgdxMvps6T9yo5uG0Lscx2nLw6RNJcZq1yBKdCLcI0I6Nb25lzLzC11ISloIrE2iGQaCnCzGTtTXyBs',
+            token,
+            authAddress,
           },
         ],
       },
