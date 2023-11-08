@@ -63,53 +63,31 @@ export const onTransaction: OnTransactionHandler = async ({ transaction }) => {
     };
   }
 
-  // const provider = new Eulith.Provider({
-  //   network: Eulith.Networks.Predefined.mainnet.with({
-  //     eulithURL: 'http://localhost:7777',
-  //   }),
-  //   auth: Eulith.Auth.fromToken(storedData.token),
-  // });
-  //
-  // const response = await provider.request({
-  //   method: 'eulith_screen_transaction',
-  //   params: [transaction],
-  // });
-
   const { token, authAddress } = storedData;
-
-  // TODO: can't use eulith client lib?
-  const httpResponse = await fetch(
-    // TODO: construct URL properly
+  const provider = new Eulith.Provider({
     // TODO: how do we know network?
-    // `http://localhost:7777/v0?auth_address=${authAddress}`,
-    `https://arb-main.eulithrpc.com/v0?auth_address=${authAddress}`,
-    {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({
-        jsonrpc: '2.0',
-        id: '1',
-        method: 'eulith_screen_transaction',
-        params: [transaction],
-      }),
-    },
-  );
-  const response = await httpResponse.json();
+    network: Eulith.Networks.Predefined.arbitrum,
+    auth: Eulith.Auth.fromToken(token),
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    urlQueryParams: { auth_address: authAddress },
+  });
 
-  if (response.error) {
+  let results;
+
+  try {
+    results = (await provider.request({
+      method: 'eulith_screen_transaction',
+      params: [transaction],
+    })) as ScreenTransactionResponse;
+  } catch (error) {
     return {
       content: panel([
         heading('Eulith'),
         text('Error'),
-        copyable(JSON.stringify(response)),
+        copyable(JSON.stringify(error)),
       ]),
     };
   }
-
-  const results = response.result as ScreenTransactionResponse;
 
   if (results.length === 0) {
     return {
