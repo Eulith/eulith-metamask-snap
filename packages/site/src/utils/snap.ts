@@ -57,10 +57,21 @@ export const getSnap = async (version?: string): Promise<Snap | undefined> => {
  * Invoke the "hello" method from the example snap.
  */
 
-export const sendHello = async () => {
+export const setEulithToken = async () => {
   await window.ethereum.request({
     method: 'wallet_invokeSnap',
-    params: { snapId: defaultSnapOrigin, request: { method: 'hello' } },
+    params: {
+      snapId: defaultSnapOrigin,
+      request: {
+        method: 'eulith_snapSetToken',
+        params: [
+          {
+            token:
+              'eyJ0eXAiOiJKV1QiLCJhbGciOiJFUzI1NksifQ.eyJzdWIiOiJsaWJ0ZXN0IiwiZXhwIjoxNzMwOTI0MTIzLCJzZWVkIjoiYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWEiLCJwcml2aWxlZ2VzIjp7InByaXZpbGVnZXMiOlsiQXJtb3JXYWxsZXQiLCJBZG1pbiJdfX0.uxt5qTPOFgdxMvps6T9yo5uG0Lscx2nLw6RNJcZq1yBKdCLcI0I6Nb25lzLzC11ISloIrE2iGQaCnCzGTtTXyBs',
+          },
+        ],
+      },
+    },
   });
 };
 

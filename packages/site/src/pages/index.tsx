@@ -5,7 +5,7 @@ import {
   ConnectButton,
   InstallFlaskButton,
   ReconnectButton,
-  SendHelloButton,
+  SetTokenButton,
   Card,
 } from '../components';
 import { defaultSnapOrigin } from '../config';
@@ -14,7 +14,7 @@ import {
   connectSnap,
   getSnap,
   isLocalSnap,
-  sendHello,
+  setEulithToken,
   shouldDisplayReconnectButton,
 } from '../utils';
 
@@ -124,9 +124,9 @@ const Index = () => {
     }
   };
 
-  const handleSendHelloClick = async () => {
+  const handleSetToken = async () => {
     try {
-      await sendHello();
+      await setEulithToken();
     } catch (error) {
       console.error(error);
       dispatch({ type: MetamaskActions.SetError, payload: error });
@@ -192,12 +192,11 @@ const Index = () => {
         )}
         <Card
           content={{
-            title: 'Send Hello message',
-            description:
-              'Display a custom message within a confirmation screen in MetaMask.',
+            title: 'Set Eulith token',
+            description: 'Copy a Eulith token to the snap in MetaMask.',
             button: (
-              <SendHelloButton
-                onClick={handleSendHelloClick}
+              <SetTokenButton
+                onClick={handleSetToken}
                 disabled={!state.installedSnap}
               />
             ),

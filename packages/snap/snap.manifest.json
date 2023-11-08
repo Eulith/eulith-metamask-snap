@@ -1,13 +1,13 @@
 {
   "version": "0.1.0",
-  "description": "An example Snap written in TypeScript.",
-  "proposedName": "TypeScript Example",
+  "description": "Screen your transactions with deep simulation and Eulith's security policy.",
+  "proposedName": "Eulith Transaction Screen",
   "repository": {
     "type": "git",
     "url": "https://github.com/MetaMask/template-snap-monorepo.git"
   },
   "source": {
-    "shasum": "kzvKODoZM6oyFnKArrCu/CfzhPqwxquqOLxssYd5GS0=",
+    "shasum": "POA+Ml5KSf0zahZlolpfEz+A6WMc1iXlM+2FpfMFJHs=",
     "location": {
       "npm": {
         "filePath": "dist/bundle.js",
@@ -18,7 +18,6 @@
     }
   },
   "initialPermissions": {
-    "snap_dialog": {},
     "snap_manageState": {},
     "endowment:rpc": {
       "dapps": true,
