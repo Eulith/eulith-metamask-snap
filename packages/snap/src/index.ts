@@ -62,14 +62,20 @@ export const onTransaction: OnTransactionHandler = async ({ transaction }) => {
     };
   }
 
+  const chainIdString = await ethereum.request({ method: 'eth_chainId' });
+  if (!chainIdString) {
+    throw new Error('Unable to fetch chain ID from Ethereum provider.');
+  }
+  const chainId = Number(chainIdString);
+  const url = chainIdToUrl(chainId);
+
   const { token, authAddress } = storedData;
 
   // can't use eulith client because axios doesn't work in the plugin sandbox
   // https://docs.metamask.io/snaps/how-to/troubleshoot/#axios
   const httpResponse = await fetch(
-    // TODO: how do we know network?
     // TODO: construct URL properly
-    `https://arb-main.eulithrpc.com/v0?auth_address=${authAddress}`,
+    `${url}?auth_address=${authAddress}`,
     {
       method: 'POST',
       headers: {
@@ -167,3 +173,18 @@ export const onTransaction: OnTransactionHandler = async ({ transaction }) => {
     content,
   };
 };
+
+function chainIdToUrl(chainId: number): string {
+  const baseUrl = 'eulithrpc.com/v0';
+  let network;
+  if (chainId === 1) {
+    network = 'eth-main';
+  } else if (chainId === 137) {
+    network = 'poly-main';
+  } else if (chainId === 42161) {
+    network = 'arb-main';
+  } else {
+    throw new Error(`Unknown chain ID: ${chainId}`);
+  }
+  return `https://${network}.${baseUrl}`;
+}
