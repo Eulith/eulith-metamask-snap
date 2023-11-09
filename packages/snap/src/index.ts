@@ -3,7 +3,6 @@ import type {
   OnTransactionHandler,
 } from '@metamask/snaps-types';
 import { copyable, heading, panel, text } from '@metamask/snaps-ui';
-import * as Eulith from 'eulith-web3js';
 
 type SetAccountRequest = {
   token: string;
@@ -64,43 +63,94 @@ export const onTransaction: OnTransactionHandler = async ({ transaction }) => {
   }
 
   const { token, authAddress } = storedData;
-  const provider = new Eulith.Provider({
+
+  // can't use eulith client because axios doesn't work in the plugin sandbox
+  // https://docs.metamask.io/snaps/how-to/troubleshoot/#axios
+  const httpResponse = await fetch(
     // TODO: how do we know network?
-    network: Eulith.Networks.Predefined.arbitrum,
-    auth: Eulith.Auth.fromToken(token),
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    urlQueryParams: { auth_address: authAddress },
-  });
+    // TODO: construct URL properly
+    `https://arb-main.eulithrpc.com/v0?auth_address=${authAddress}`,
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        jsonrpc: '2.0',
+        id: '1',
+        method: 'eulith_screen_transaction',
+        params: [transaction],
+      }),
+    },
+  );
+  const response = await httpResponse.json();
 
-  let results;
-
-  try {
-    results = (await provider.request({
-      method: 'eulith_screen_transaction',
-      params: [transaction],
-    })) as ScreenTransactionResponse;
-  } catch (error) {
+  if (response.error) {
     return {
       content: panel([
-        heading('Eulith'),
-        text('Error'),
-        copyable(JSON.stringify(error)),
+        heading('Eulith returned error response.'),
+        copyable(JSON.stringify(response)),
       ]),
     };
   }
 
+  const results = response.result as ScreenTransactionResponse;
   if (results.length === 0) {
     return {
-      content: panel([heading('Eulith'), text('Policy passed.')]),
+      content: panel([
+        heading('Eulith policy passed.'),
+        text(
+          'Your transaction was **deep-simulated** and it **passed** the security policy.',
+        ),
+      ]),
     };
   }
 
-  // TODO: error formatting?
+  const nbsp = '\xa0';
+  const content = panel([
+    heading('This transaction may be unsafe.'),
+    text(
+      'Your transaction was **deep-simulated** and **did not pass** the security policy.',
+    ),
+    text(nbsp),
+    text(
+      'Carefully review the failures below. If this transaction is legitimate, you may need to add contract addresses to **your whitelist** at eulithclient.com',
+    ),
+  ]);
+
+  let i = 1;
+  for (const result of results) {
+    for (const deniedCall of result.denied_calls) {
+      const reason = deniedCall.reason;
+      content.children.push(text(nbsp));
+      content.children.push(heading(`Policy failure ${i}`));
+      if (reason.type === 'EthDestination') {
+        content.children.push(text(`ETH transfer to non-whitelisted address:`));
+        content.children.push(text(nbsp));
+        content.children.push(copyable(reason.destination));
+      } else {
+        content.children.push(text(`${reason.comment} (${reason.protocol})`));
+        content.children.push(text(nbsp));
+        // content.children.push(divider());
+        content.children.push(
+          text('Examined addresses (these may need to be whitelisted):'),
+        );
+        for (const address of reason.examined_addresses) {
+          content.children.push(text(nbsp));
+          content.children.push(copyable(address));
+        }
+      }
+
+      i += 1;
+    }
+  }
+
+  content.children.push(text(nbsp));
+  content.children.push(heading('Full policy failure details'));
+  content.children.push(copyable(JSON.stringify(results)));
+
   return {
-    content: panel([
-      heading('Eulith'),
-      text('Policy failed.'),
-      copyable(JSON.stringify(results)),
-    ]),
+    content,
   };
 };
