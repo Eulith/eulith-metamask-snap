@@ -144,6 +144,19 @@ export const onTransaction: OnTransactionHandler = async ({ transaction }) => {
 
       i += 1;
     }
+
+    for (const complianceDenial of result.denied_compliance) {
+      content.children.push(text(nbsp));
+      content.children.push(heading(`Policy failure ${i}`));
+      const explanation = complianceDenial.risk_explanation
+        ? ` (${complianceDenial.risk_explanation})`
+        : '';
+      content.children.push(
+        text(`Address was flagged as a compliance risk${explanation}`),
+      );
+      content.children.push(text(nbsp));
+      content.children.push(copyable(complianceDenial.address));
+    }
   }
 
   content.children.push(text(nbsp));
