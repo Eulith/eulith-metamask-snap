@@ -1,33 +1,24 @@
 import { expect } from '@jest/globals';
 import { installSnap } from '@metamask/snaps-jest';
-import { panel, text } from '@metamask/snaps-ui';
 
 describe('onRpcRequest', () => {
-  describe('hello', () => {
-    it('shows a confirmation dialog', async () => {
+  describe('eulith_snapSetAccount', () => {
+    it('succeeds', async () => {
       const { request } = await installSnap();
 
       const origin = 'Jest';
       const response = request({
-        method: 'hello',
+        method: 'eulith_snapSetAccount',
+        params: [
+          {
+            authAddress: '0x8A74b4D41b498467512A75D6422F8899D48B27e1',
+            token: 'token',
+          },
+        ],
         origin,
       });
 
-      const ui = await response.getInterface();
-      expect(ui.type).toBe('confirmation');
-      expect(ui).toRender(
-        panel([
-          text(`Hello, **${origin}**!`),
-          text('This custom confirmation is just for display purposes.'),
-          text(
-            'But you can edit the snap source code to make it do something, if you want to!',
-          ),
-        ]),
-      );
-
-      await ui.ok();
-
-      expect(await response).toRespondWith(true);
+      expect(await response).toRespondWith(null);
     });
   });
 
