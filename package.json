@@ -1,15 +1,12 @@
 {
-  "name": "snap",
+  "name": "eulith-metamask-snap",
   "version": "0.1.0",
   "private": true,
-  "description": "",
-  "homepage": "https://github.com/MetaMask/template-snap-monorepo#readme",
-  "bugs": {
-    "url": "https://github.com/MetaMask/template-snap-monorepo/issues"
-  },
+  "description": "A MetaMask snap to apply Eulith's security policy to transaction requests",
+  "homepage": "https://eulith.com",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/MetaMask/template-snap-monorepo.git"
+    "url": "git+https://github.com/Eulith/eulith-metamask-snap.git"
   },
   "main": "./dist/bundle.js",
   "author": "",
