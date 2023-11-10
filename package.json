@@ -1,5 +1,5 @@
 {
-  "name": "root",
+  "name": "snap",
   "version": "0.1.0",
   "private": true,
   "description": "",
@@ -11,28 +11,41 @@
     "type": "git",
     "url": "git+https://github.com/MetaMask/template-snap-monorepo.git"
   },
-  "license": "(MIT-0 OR Apache-2.0)",
+  "main": "./dist/bundle.js",
   "author": "",
-  "workspaces": [
-    "packages/*"
+  "files": [
+    "dist/",
+    "images/",
+    "snap.manifest.json"
   ],
   "scripts": {
-    "build": "yarn workspaces foreach --parallel --topological --verbose run build",
-    "install-chrome": "./scripts/install-chrome.sh",
+    "build": "mm-snap build",
+    "build:clean": "yarn clean && yarn build",
+    "clean": "rimraf dist",
     "lint": "yarn lint:eslint && yarn lint:misc --check",
-    "lint:eslint": "eslint . --cache --ext js,jsx,ts,tsx",
+    "lint:eslint": "eslint . --cache --ext js,ts",
     "lint:fix": "yarn lint:eslint --fix && yarn lint:misc --write",
-    "lint:misc": "prettier '**/*.json' '**/*.md' '!**/CHANGELOG.md' '**/*.yml' --ignore-path .gitignore",
-    "start": "yarn workspaces foreach --parallel --interlaced --verbose run start",
-    "test": "yarn workspace snap run test"
+    "lint:misc": "prettier '**/*.json' '**/*.md' '!CHANGELOG.md' --ignore-path .gitignore",
+    "serve": "mm-snap serve",
+    "start": "mm-snap watch",
+    "test": "jest"
+  },
+  "dependencies": {
+    "@metamask/snaps-types": "^3.0.1",
+    "@metamask/snaps-ui": "^3.0.1",
+    "buffer": "^6.0.3"
   },
   "devDependencies": {
+    "@jest/globals": "^29.5.0",
     "@lavamoat/allow-scripts": "^3.0.0",
     "@lavamoat/preinstall-always-fail": "^2.0.0",
+    "@metamask/auto-changelog": "^3.4.2",
     "@metamask/eslint-config": "^12.0.0",
     "@metamask/eslint-config-jest": "^12.0.0",
     "@metamask/eslint-config-nodejs": "^12.0.0",
     "@metamask/eslint-config-typescript": "^12.0.0",
+    "@metamask/snaps-cli": "^3.0.1",
+    "@metamask/snaps-jest": "^3.0.0",
     "@typescript-eslint/eslint-plugin": "^5.42.1",
     "@typescript-eslint/parser": "^5.42.1",
     "eslint": "^8.45.0",
@@ -43,9 +56,13 @@
     "eslint-plugin-n": "^15.7.0",
     "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-promise": "^6.1.1",
+    "jest": "^29.5.0",
     "prettier": "^2.7.1",
     "prettier-plugin-packagejson": "^2.2.18",
+    "rimraf": "^3.0.2",
     "sharp": "^0.30.7",
+    "through2": "^4.0.2",
+    "ts-jest": "^29.1.0",
     "typescript": "^4.7.4"
   },
   "packageManager": "yarn@3.2.1",
@@ -55,7 +72,18 @@
   "lavamoat": {
     "allowScripts": {
       "@lavamoat/preinstall-always-fail": false,
-      "sharp": true
+      "sharp": true,
+      "@metamask/snaps-cli>@metamask/snaps-utils>@metamask/permission-controller>@metamask/controller-utils>ethereumjs-util>ethereum-cryptography>keccak": false,
+      "@metamask/snaps-cli>@metamask/snaps-utils>@metamask/permission-controller>@metamask/controller-utils>ethereumjs-util>ethereum-cryptography>secp256k1": false,
+      "@metamask/snaps-cli>@swc/core": false,
+      "@metamask/snaps-jest>pptr-testing-library>@testing-library/dom>aria-query>@babel/runtime-corejs3>core-js-pure": false,
+      "@metamask/snaps-jest>puppeteer": false,
+      "@metamask/snaps-jest>webdriverio>@wdio/utils>edgedriver": false,
+      "@metamask/snaps-jest>webdriverio>@wdio/utils>geckodriver": false
     }
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
   }
 }

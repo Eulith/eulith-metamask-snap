@@ -4,10 +4,10 @@
   "proposedName": "Eulith Transaction Screen",
   "repository": {
     "type": "git",
-    "url": "https://github.com/MetaMask/template-snap-monorepo.git"
+    "url": "git+https://github.com/MetaMask/template-snap-monorepo.git"
   },
   "source": {
-    "shasum": "puDlvLyeN3sNSFy9XmX63+OJUu0yxAZS4uTCU9ccbcg=",
+    "shasum": "qdbot73d7R0fGYoDLfeg9O0ZtDTGycnOawvjws2JJig=",
     "location": {
       "npm": {
         "filePath": "dist/bundle.js",

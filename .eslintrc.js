@@ -3,6 +3,7 @@ module.exports = {
 
   parserOptions: {
     sourceType: 'module',
+    tsconfigRootDir: __dirname,
   },
 
   extends: ['@metamask/eslint-config'],
@@ -31,6 +32,17 @@ module.exports = {
           'error',
           { allow: ['describe', 'expect', 'it'] },
         ],
+      },
+    },
+    {
+      files: ['snap.config.ts'],
+      extends: ['@metamask/eslint-config-nodejs'],
+    },
+
+    {
+      files: ['*.test.ts'],
+      rules: {
+        '@typescript-eslint/unbound-method': 'off',
       },
     },
   ],
