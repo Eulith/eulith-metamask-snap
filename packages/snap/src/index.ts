@@ -62,34 +62,31 @@ export const onTransaction: OnTransactionHandler = async ({ transaction }) => {
     };
   }
 
+  const { token, authAddress } = storedData;
+
   const chainIdString = await ethereum.request({ method: 'eth_chainId' });
   if (!chainIdString) {
     throw new Error('Unable to fetch chain ID from Ethereum provider.');
   }
   const chainId = Number(chainIdString);
   const url = chainIdToUrl(chainId);
-
-  const { token, authAddress } = storedData;
+  url.searchParams.append('auth_address', authAddress);
 
   // can't use eulith client because axios doesn't work in the plugin sandbox
   // https://docs.metamask.io/snaps/how-to/troubleshoot/#axios
-  const httpResponse = await fetch(
-    // TODO: construct URL properly
-    `${url}?auth_address=${authAddress}`,
-    {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({
-        jsonrpc: '2.0',
-        id: '1',
-        method: 'eulith_screen_transaction',
-        params: [transaction],
-      }),
+  const httpResponse = await fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
     },
-  );
+    body: JSON.stringify({
+      jsonrpc: '2.0',
+      id: '1',
+      method: 'eulith_screen_transaction',
+      params: [transaction],
+    }),
+  });
   const response = await httpResponse.json();
 
   if (response.error) {
@@ -174,7 +171,7 @@ export const onTransaction: OnTransactionHandler = async ({ transaction }) => {
   };
 };
 
-function chainIdToUrl(chainId: number): string {
+function chainIdToUrl(chainId: number): URL {
   const baseUrl = 'eulithrpc.com/v0';
   let network;
   if (chainId === 1) {
@@ -186,5 +183,5 @@ function chainIdToUrl(chainId: number): string {
   } else {
     throw new Error(`Unknown chain ID: ${chainId}`);
   }
-  return `https://${network}.${baseUrl}`;
+  return new URL(`https://${network}.${baseUrl}`);
 }
