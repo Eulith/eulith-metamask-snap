@@ -1,0 +1,25 @@
+import type { JsonRpcRequest } from '@metamask/snaps-types';
+
+type SetAccountRequest = {
+  token: string;
+  authAddress: string;
+};
+
+export async function handleSnapSetAccount(request: JsonRpcRequest) {
+  if (!request.params || !Array.isArray(request.params)) {
+    throw new Error('eulith_snapSetAccount expected array of params.');
+  }
+
+  if (request.params.length !== 1) {
+    throw new Error('eulith_snapSetAccount expected exactly 1 param.');
+  }
+
+  const payload = request.params[0] as SetAccountRequest;
+  return snap.request({
+    method: 'snap_manageState',
+    params: {
+      operation: 'update',
+      newState: { token: payload.token, authAddress: payload.authAddress },
+    },
+  });
+}
