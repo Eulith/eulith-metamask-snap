@@ -120,7 +120,9 @@ function chainIdToUrl(chainId: number): URL {
   } else if (chainId === 42161) {
     network = 'arb-main';
   } else {
-    throw new Error(`Unknown chain ID: ${chainId}`);
+    throw new Error(
+      `The current chain (id = ${chainId}) is not supported. Please contact Eulith if you are interested in trading on this chain.`,
+    );
   }
   return new URL(`https://${network}.${baseUrl}`);
 }
