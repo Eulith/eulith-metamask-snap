@@ -73,5 +73,9 @@ node_modules/
 .yarn
 .pnp.*
 
+# couldn't use repository from fresh clone without these included
+!.yarn/releases
+!.yarn/plugins
+
 .idea/
 .vscode/
