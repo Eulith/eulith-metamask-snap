@@ -53,7 +53,7 @@ export type RevertDenialReason = {
 };
 
 export type UnknownDenialReason = {
-  type: Exclude<string, 'EthDestination' | 'Rule'>;
+  type: Exclude<string, 'EthDestination' | 'Revert' | 'Rule'>;
 };
 
 export type RuleExplanation = {
