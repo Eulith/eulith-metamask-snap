@@ -34,14 +34,13 @@ export function policyFailed(
     const reason = deniedCall.reason;
     content.children.push(text(nbsp));
     content.children.push(heading(`Policy failure ${i}`));
-    if (reason.type === 'EthDestination') {
+    if (reason.type === 'EthDestination' && 'destination' in reason) {
       content.children.push(text(`ETH transfer to non-whitelisted address:`));
       content.children.push(text(nbsp));
       content.children.push(copyable(reason.destination));
-    } else {
+    } else if (reason.type === 'Rule' && 'protocol' in reason) {
       content.children.push(text(`${reason.comment} (${reason.protocol})`));
       content.children.push(text(nbsp));
-      // content.children.push(divider());
       content.children.push(
         text('Examined addresses (these may need to be whitelisted):'),
       );
@@ -49,6 +48,18 @@ export function policyFailed(
         content.children.push(text(nbsp));
         content.children.push(copyable(address));
       }
+    } else if (reason.type === 'Revert' && 'reason' in reason) {
+      if (reason.reason) {
+        content.children.push(
+          text(`Transaction reverted with message: ${reason.reason}`),
+        );
+      } else {
+        content.children.push(text('Transaction reverted.'));
+      }
+    } else {
+      content.children.push(text('Transaction denied for unspecified reason.'));
+      content.children.push(text(nbsp));
+      content.children.push(copyable(JSON.stringify(reason)));
     }
 
     i += 1;
@@ -73,12 +84,6 @@ export function policyFailed(
 
   return {
     content,
-  };
-}
-
-export function tokenNotSet(): OnTransactionResponse {
-  return {
-    content: panel([heading('Eulith'), text('Eulith token not set')]),
   };
 }
 

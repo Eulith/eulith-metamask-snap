@@ -26,7 +26,11 @@ export type DeniedCall = {
   call: SimulatedCall;
 };
 
-export type DenialReason = EthDestinationDenialReason | RuleDenialReason;
+export type DenialReason =
+  | EthDestinationDenialReason
+  | RuleDenialReason
+  | RevertDenialReason
+  | UnknownDenialReason;
 
 export type EthDestinationDenialReason = {
   type: 'EthDestination';
@@ -41,6 +45,15 @@ export type RuleDenialReason = {
   matched_rule: RuleExplanation[];
   examined_addresses: string[];
   comment: string | null;
+};
+
+export type RevertDenialReason = {
+  type: 'Revert';
+  reason: string;
+};
+
+export type UnknownDenialReason = {
+  type: Exclude<string, 'EthDestination' | 'Rule'>;
 };
 
 export type RuleExplanation = {

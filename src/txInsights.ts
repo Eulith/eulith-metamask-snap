@@ -19,7 +19,9 @@ export async function screenTransaction(transaction: {
   })) as StoredData | null;
 
   if (!storedData) {
-    return ui.tokenNotSet();
+    throw new Error(
+      'Eulith services are not connected. Please navigate to https://eulithclient.com/metamask to set up this plugin.',
+    );
   }
 
   const { token, authAddress } = storedData;
