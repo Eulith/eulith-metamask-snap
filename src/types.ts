@@ -1,6 +1,7 @@
 export type StoredData = {
   token: string;
-  authAddress: string;
+  whitelistId: number;
+  eulithDomain: string;
 };
 
 /* eslint-disable @typescript-eslint/naming-convention */

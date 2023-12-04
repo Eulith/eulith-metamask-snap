@@ -15,6 +15,7 @@ export function policyPassed(): OnTransactionResponse {
 }
 
 export function policyFailed(
+  whitelistId: number,
   results: ScreenTransactionFailureResponse,
 ): OnTransactionResponse {
   const nbsp = '\xa0';
@@ -25,7 +26,7 @@ export function policyFailed(
     ),
     text(nbsp),
     text(
-      'Carefully review the failures below. If this transaction is legitimate, you may need to add contract addresses to **your whitelist** at eulithclient.com',
+      `Carefully review the failures below. If this transaction is legitimate, you may need to add contract addresses to **your whitelist** at eulithclient.com (id=${whitelistId}).`,
     ),
   ]);
 
@@ -88,10 +89,21 @@ export function policyFailed(
 }
 
 export function serverError(response: any): OnTransactionResponse {
-  return {
-    content: panel([
-      heading('Eulith returned error response.'),
-      copyable(JSON.stringify(response)),
-    ]),
-  };
+  const message = response?.error?.message;
+  if (typeof message === 'string') {
+    return {
+      content: panel([
+        heading('Eulith returned an error response.'),
+        text(`Message: ${message}`),
+        copyable(JSON.stringify(response)),
+      ]),
+    };
+  } else {
+    return {
+      content: panel([
+        heading('Eulith returned an error response.'),
+        copyable(JSON.stringify(response)),
+      ]),
+    };
+  }
 }

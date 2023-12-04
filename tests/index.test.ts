@@ -11,7 +11,8 @@ describe('onRpcRequest', () => {
         method: 'eulith_snapSetAccount',
         params: [
           {
-            authAddress: '0x8A74b4D41b498467512A75D6422F8899D48B27e1',
+            whitelistId: 1,
+            eulithDomain: 'localhost:7777',
             token: 'token',
           },
         ],

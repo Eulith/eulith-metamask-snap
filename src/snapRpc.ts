@@ -2,7 +2,8 @@ import type { JsonRpcRequest } from '@metamask/snaps-types';
 
 type SetAccountRequest = {
   token: string;
-  authAddress: string;
+  whitelistId: number;
+  eulithDomain: string;
 };
 
 export async function handleSnapSetAccount(request: JsonRpcRequest) {
@@ -19,7 +20,7 @@ export async function handleSnapSetAccount(request: JsonRpcRequest) {
     method: 'snap_manageState',
     params: {
       operation: 'update',
-      newState: { token: payload.token, authAddress: payload.authAddress },
+      newState: payload,
     },
   });
 }

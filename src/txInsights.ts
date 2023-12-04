@@ -24,21 +24,21 @@ export async function screenTransaction(transaction: {
     );
   }
 
-  const { token, authAddress } = storedData;
+  const { token, whitelistId, eulithDomain } = storedData;
 
   const chainIdString = await ethereum.request({ method: 'eth_chainId' });
   if (!chainIdString) {
     throw new Error('Unable to fetch chain ID from Ethereum provider.');
   }
   const chainId = Number(chainIdString);
-  const url = chainIdToUrl(chainId);
-  url.searchParams.append('auth_address', authAddress);
+  const url = chainIdToUrl(eulithDomain, chainId);
 
   const response = await makeJsonRpcRequest(
     url,
     token,
     'eulith_screen_transaction',
-    [transaction],
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    [{ whitelist_id: whitelistId, transactions: [transaction] }],
   );
 
   let results;
@@ -51,7 +51,7 @@ export async function screenTransaction(transaction: {
   if ('passed' in results) {
     return ui.policyPassed();
   } else {
-    return ui.policyFailed(results);
+    return ui.policyFailed(whitelistId, results);
   }
 }
 
@@ -112,8 +112,11 @@ function convertLegacyResult(jsonRpc: any): ScreenTransactionResponse {
   /* eslint-enable @typescript-eslint/naming-convention */
 }
 
-function chainIdToUrl(chainId: number): URL {
-  const baseUrl = 'eulithrpc.com/v0';
+function chainIdToUrl(eulithDomain: string, chainId: number): URL {
+  if (eulithDomain.startsWith('localhost')) {
+    return new URL(`http://${eulithDomain}/v0`);
+  }
+
   let network;
   if (chainId === 1) {
     network = 'eth-main';
@@ -126,5 +129,5 @@ function chainIdToUrl(chainId: number): URL {
       `The current chain (id = ${chainId}) is not supported. Please contact Eulith if you are interested in trading on this chain.`,
     );
   }
-  return new URL(`https://${network}.${baseUrl}`);
+  return new URL(`https://${network}.${eulithDomain}/v0`);
 }
