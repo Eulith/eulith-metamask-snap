@@ -11,11 +11,12 @@ export type ScreenTransactionResponse =
   | ScreenTransactionFailureResponse;
 
 export type ScreenTransactionSuccessResponse = {
-  passed: boolean;
+  passed: true;
 };
 
 // called ArmorCommitResponse in the backend
 export type ScreenTransactionFailureResponse = {
+  passed: false;
   denied_calls: DeniedCall[];
   compliance_denials: AddressComplianceResult[];
   traces: string[];
