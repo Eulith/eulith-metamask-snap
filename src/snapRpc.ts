@@ -1,4 +1,4 @@
-import type { JsonRpcRequest } from '@metamask/snaps-types';
+import type { JsonRpcRequest } from '@metamask/snaps-sdk';
 
 type SetAccountRequest = {
   token: string;

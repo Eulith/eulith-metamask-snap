@@ -7,7 +7,7 @@
     "url": "git+https://github.com/Eulith/eulith-metamask-snap.git"
   },
   "source": {
-    "shasum": "GvI2/VxUt0iJr1ByGjJwPX7pDWXnWd0Qs6RVqH5qco0=",
+    "shasum": "/5NjtCXjejKMaDgkLtC7nCaMcaA42GK643IevybiySY=",
     "location": {
       "npm": {
         "filePath": "dist/bundle.js",

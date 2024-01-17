@@ -1,4 +1,4 @@
-import type { OnTransactionResponse } from '@metamask/snaps-types';
+import type { OnTransactionResponse } from '@metamask/snaps-sdk';
 import type { Json } from '@metamask/utils';
 
 import type {
