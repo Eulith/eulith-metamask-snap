@@ -1,6 +1,6 @@
 {
   "name": "eulith-metamask-snap",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "A MetaMask snap to apply Eulith's security policy to transaction requests",
   "homepage": "https://eulith.com",
   "repository": {
