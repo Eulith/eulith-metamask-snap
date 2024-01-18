@@ -5,7 +5,7 @@ To install the snap:
 1. Disable any existing MetaMask browser extension.
 2. Install the [MetaMask Flask](https://metamask.io/flask/) extension for development.
 3. Run `yarn install && yarn start` in this repo.
-4. Start `devrpc`.
+4. Start a local instance of Eulith backend services.
 5. Start a local instance of the Eulith frontend.
 6. Open http://localhost:3000/metamask and click 'Install'.
 

@@ -1,5 +1,5 @@
 {
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Screen your transactions with deep simulation and Eulith's security policy.",
   "proposedName": "Eulith",
   "repository": {
@@ -7,7 +7,7 @@
     "url": "git+https://github.com/Eulith/eulith-metamask-snap.git"
   },
   "source": {
-    "shasum": "xPIOcuNQADe3+Ndu6V5/wQdjR0aHrSx/gSY1/6NSzxQ=",
+    "shasum": "1QEPpvdeqO2MAmkOfGXds95FDaBjyGfqCFe53wzXFtM=",
     "location": {
       "npm": {
         "filePath": "dist/bundle.js",

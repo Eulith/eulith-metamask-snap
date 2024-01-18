@@ -1,5 +1,5 @@
-import type { OnTransactionResponse } from '@metamask/snaps-types';
-import { copyable, heading, panel, text } from '@metamask/snaps-ui';
+import type { OnTransactionResponse } from '@metamask/snaps-sdk';
+import { copyable, heading, panel, text } from '@metamask/snaps-sdk';
 
 import type { ScreenTransactionFailureResponse } from './types';
 
@@ -85,6 +85,7 @@ export function policyFailed(
 
   return {
     content,
+    severity: 'critical',
   };
 }
 

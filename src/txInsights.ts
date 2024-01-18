@@ -1,4 +1,4 @@
-import type { OnTransactionResponse } from '@metamask/snaps-types';
+import type { OnTransactionResponse } from '@metamask/snaps-sdk';
 import type { Json } from '@metamask/utils';
 
 import type {
@@ -48,7 +48,7 @@ export async function screenTransaction(transaction: {
     return ui.serverError(response);
   }
 
-  if ('passed' in results) {
+  if (results.passed) {
     return ui.policyPassed();
   } else {
     return ui.policyFailed(whitelistId, results);
@@ -63,19 +63,39 @@ async function makeJsonRpcRequest(
 ): Promise<any> {
   // can't use eulith client because axios doesn't work in the plugin sandbox
   // https://docs.metamask.io/snaps/how-to/troubleshoot/#axios
-  const httpResponse = await fetch(url, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify({
-      jsonrpc: '2.0',
-      id: '1',
-      method,
-      params,
-    }),
-  });
+  let httpResponse;
+  try {
+    httpResponse = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        jsonrpc: '2.0',
+        id: '1',
+        method,
+        params,
+      }),
+    });
+  } catch (error: unknown) {
+    console.error(error);
+    throw new Error(
+      'Failed to connect to Eulith backend services. Please try again later.',
+    );
+  }
+
+  // only check for HTTP 500 as server will return HTTP 400 for policy failure
+  if (httpResponse.status >= 500 && httpResponse.status < 600) {
+    throw new Error(
+      `Received an error response from Eulith backend services. HTTP ${httpResponse.status}. Please try again later.`,
+    );
+  } else if (httpResponse.status === 401) {
+    throw new Error(
+      'Please log in at eulithclient.com to access transaction insights.',
+    );
+  }
+
   return await httpResponse.json();
 }
 
@@ -102,6 +122,7 @@ function convertLegacyResult(jsonRpc: any): ScreenTransactionResponse {
     }
 
     return {
+      passed: false,
       denied_calls: deniedCalls,
       compliance_denials: complianceDenials,
       traces: [],

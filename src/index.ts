@@ -1,7 +1,7 @@
 import type {
   OnRpcRequestHandler,
   OnTransactionHandler,
-} from '@metamask/snaps-types';
+} from '@metamask/snaps-sdk';
 
 import { handleSnapSetAccount } from './snapRpc';
 import { screenTransaction } from './txInsights';

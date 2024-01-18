@@ -1,4 +1,4 @@
-import type { JsonRpcRequest } from '@metamask/snaps-types';
+import type { JsonRpcRequest } from '@metamask/snaps-sdk';
 
 type SetAccountRequest = {
   token: string;
@@ -7,6 +7,8 @@ type SetAccountRequest = {
 };
 
 export async function handleSnapSetAccount(request: JsonRpcRequest) {
+  console.log('eulith_snapSetAccount request received.');
+
   if (!request.params || !Array.isArray(request.params)) {
     throw new Error('eulith_snapSetAccount expected array of params.');
   }
