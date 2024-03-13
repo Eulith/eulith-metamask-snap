@@ -1,5 +1,5 @@
 {
-  "version": "0.2.4",
+  "version": "0.2.5",
   "description": "Screen your transactions with deep simulation and Eulith's security policy.",
   "proposedName": "DeFi Armor",
   "repository": {
@@ -7,7 +7,7 @@
     "url": "git+https://github.com/Eulith/eulith-metamask-snap.git"
   },
   "source": {
-    "shasum": "M/AEe8l8UV+lIL0lqdlgFyDhoZ+IDysZ3r//tVXC2Ts=",
+    "shasum": "hp4PBkTppEaWdIlrKnM7801rAimN4Y9t1+AB59yFHB4=",
     "location": {
       "npm": {
         "filePath": "dist/bundle.js",
