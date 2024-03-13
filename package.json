@@ -1,6 +1,6 @@
 {
   "name": "defi-armor-snap",
-  "version": "0.2.4",
+  "version": "0.2.5",
   "description": "A MetaMask snap to apply Eulith's security policy to transaction requests",
   "homepage": "https://eulith.com",
   "repository": {
